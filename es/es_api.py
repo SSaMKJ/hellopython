@@ -5,17 +5,17 @@ import json
 class ES_API:
     es = Elasticsearch(hosts="127.0.0.1", port=9200, http_auth=("elastic", "changeme"))   # 객체 생성
     @classmethod
-    def srvHealthCheck(self):
-        health = self.es.cluster.health()
+    def srvHealthCheck(cls):
+        health = cls.es.cluster.health()
         print (health)
 
     @classmethod
-    def allIndex(self):
+    def allIndex(cls):
         # Elasticsearch에 있는 모든 Index 조회
-        print (self.es.cat.indices())
+        print (cls.es.cat.indices())
 
     @classmethod
-    def dataInsert(self):
+    def dataInsert(cls):
         # ===============
         # 데이터 삽입
         # ===============
@@ -29,15 +29,15 @@ class ES_API:
                        "rgter"  :i["rgter"],
                        "tel"    :i["tel"],
                        "title"  :i["title"]}
-                res = self.es.index(index="today19020301", doc_type="today", id=n+1, body=doc)
+                res = cls.es.index(index="today19020301", doc_type="today", id=n+1, body=doc)
                 print (res)
 
     @classmethod
-    def searchAll(self, indx=None):
+    def searchAll(cls, indx=None):
         # ===============
         # 데이터 조회 [전체]
         # ===============
-        res = self.es.search(
+        res = cls.es.search(
             index = "today19020301", doc_type = "today",
             body = {
                 "query":{"match_all":{}}
@@ -46,11 +46,11 @@ class ES_API:
         print (json.dumps(res, ensure_ascii=False, indent=4))
 
     @classmethod
-    def searchFilter(self):
+    def searchFilter(cls):
         # ===============
         # 데이터 조회 []
         # ===============
-        res = self.es.search(
+        res = cls.es.search(
             index = "today19020301", doc_type = "today",
             body = {
                 "query": {"match":{"post":"산림교육문화과"}}
@@ -59,11 +59,11 @@ class ES_API:
         ppr.pprint(res)
 
     @classmethod
-    def createIndex(self, index, body):
+    def createIndex(cls, index, body):
         # ===============
         # 인덱스 생성
         # ===============
-        self.es.indices.create(
+        cls.es.indices.create(
             index = "today19020301",
             body = {
                 "settings": {

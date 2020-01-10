@@ -13,7 +13,7 @@ from env import ROOT_DIR
 
 class MarketCap:
 
-    FILE_NAME = f'{ROOT_DIR}/data'
+    FILE_ROOT_PATH = f'{ROOT_DIR}/data'
     def __init__(self):
         pass
 
@@ -22,14 +22,14 @@ class MarketCap:
         date_str = self.today_str()
 
         ret_data = self.find_in_file(date_str, market)
-        if(ret_data is None or len(ret_data) < limit):
+        if ret_data is None or len(ret_data) < limit:
             ret_data = crawling_market_cap(market)
             self.save_in_file(ret_data, date_str, market)
         return ret_data[:limit]
 
     @classmethod
     def save_in_file(cls, ret_data, date_str, market):
-        file_name = f'{cls.FILE_NAME}/market_cap_{market}_{date_str}.json'
+        file_name = f'{cls.FILE_ROOT_PATH}/market_cap_{market}_{date_str}.json'
         with open(file_name, 'w', encoding="utf-8") as f:
             f.writelines(json.dumps(ret_data, ensure_ascii=False))
 
@@ -37,7 +37,7 @@ class MarketCap:
 
     @classmethod
     def find_in_file(cls, date_str, market):
-        file_name = f'{cls.FILE_NAME}/market_cap_{market}_{date_str}.json'
+        file_name = f'{cls.FILE_ROOT_PATH}/market_cap_{market}_{date_str}.json'
         if(os.path.isfile(file_name)):
             with open(file_name, 'r', encoding="utf-8") as f:
                 return json.loads(f.read())

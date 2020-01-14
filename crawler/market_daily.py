@@ -5,13 +5,11 @@ import pickle
 
 import os
 
-from env import ROOT_DIR
-
-FILE_ROOT_PATH = f'{ROOT_DIR}/data'
+from env import DATA_PATH
 
 
 def find_in_file(code, end_date):
-    file_name = f'{FILE_ROOT_PATH}/daily_history_{code}_{end_date}.pkl'
+    file_name = f'{DATA_PATH}/daily_history_{code}_{end_date}.pkl'
     if (os.path.isfile(file_name)):
         with open(file_name, 'rb') as f:
             return pickle.load(f)
@@ -21,7 +19,7 @@ def find_in_file(code, end_date):
 
 
 def save_in_file(df, code, end_date):
-    file_name = f'{FILE_ROOT_PATH}/daily_history_{code}_{end_date}.pkl'
+    file_name = f'{DATA_PATH}/daily_history_{code}_{end_date}.pkl'
     with open(file_name, 'wb') as f:
         return pickle.dump(df, f)
 

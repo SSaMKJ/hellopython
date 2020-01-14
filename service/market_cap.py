@@ -8,12 +8,11 @@ import json
 import os
 
 from crawler.current_price import crawling_market_cap
-from env import ROOT_DIR
+from env import DATA_PATH
 
 
 class MarketCap:
 
-    FILE_ROOT_PATH = f'{ROOT_DIR}/data'
     def __init__(self):
         pass
 
@@ -29,7 +28,7 @@ class MarketCap:
 
     @classmethod
     def save_in_file(cls, ret_data, date_str, market):
-        file_name = f'{cls.FILE_ROOT_PATH}/market_cap_{market}_{date_str}.json'
+        file_name = f'{DATA_PATH}/market_cap_{market}_{date_str}.json'
         with open(file_name, 'w', encoding="utf-8") as f:
             f.writelines(json.dumps(ret_data, ensure_ascii=False))
 
@@ -37,7 +36,7 @@ class MarketCap:
 
     @classmethod
     def find_in_file(cls, date_str, market):
-        file_name = f'{cls.FILE_ROOT_PATH}/market_cap_{market}_{date_str}.json'
+        file_name = f'{DATA_PATH}/market_cap_{market}_{date_str}.json'
         if(os.path.isfile(file_name)):
             with open(file_name, 'r', encoding="utf-8") as f:
                 return json.loads(f.read())

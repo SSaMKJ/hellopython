@@ -4,7 +4,8 @@ https://wikidocs.net/4374
 
 Dataframe examples 가장 잘 되어 있다.
 https://www.tutorialspoint.com/python_pandas/python_pandas_dataframe.htm
-
+시가총액 네이버
+https://finance.naver.com/sise/sise_market_sum.nhn
 
 
 메모나 하자.
@@ -22,6 +23,9 @@ market_cap 에서 순위를 가지고 올 수 있다. 약 900개 넘는다.
 그러면 market_daily 에서 6000개의 데이터를 가지고 오므로
 ...
 
+* KRX 에 가면 신고가/신저가 항목이 있다.
+* 여기를 잘 보면 확인 해야 할 종목들이 보일 것 같다.
+* 나는 회귀를 노리므로 신저가를 봐야 한다.
 
 다시 생각하자.
 

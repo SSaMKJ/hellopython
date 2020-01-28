@@ -5,6 +5,7 @@ import pickle
 
 import os
 
+
 from env import DATA_PATH
 
 
@@ -37,20 +38,7 @@ def MarketDaily(code, start_date=None, end_date=None):
         # Samsung(005930), 1992-01-01 ~ 2018-10-31
         df = fdr.DataReader(code, start_date, end_date)
         save_in_file(df, code, end_date)
-    decorate(df)
+
 
     return df
 
-
-def decorate(df):
-    mas = [5, 20, 60, 120, 240, 360]
-
-    mDict = {}
-    for ma in mas:
-        mDict[ma] = df['Close'].rolling(window=ma).mean()
-        key = f'MA{ma}'
-        if key not in df.columns:
-            df.insert(len(df.columns), key, mDict[ma])
-
-    df.insert(len(df.columns), 'GOLD_CROSS', df['MA5'] > df['MA20'])
-    df['GOLD_CROSS'] = df['GOLD_CROSS'].apply(lambda x: 1 if x is True else 0)

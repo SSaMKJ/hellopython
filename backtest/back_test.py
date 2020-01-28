@@ -38,23 +38,27 @@ class BackTest():
         if not is_exist_file(csv_file_name):
             daily = DailyData()
             dailyDF = daily.get_daily(cls.stock_code, end_date=cls.date_str)
-            month = month_ago(12)
+            month = month_ago(120)
             dailyDF.query('index>=%r' % month).to_csv(csv_file_name)
 
 
         # Create a cerebro entity
-        cerebro = bt.Cerebro()
+        cls.cerebro = bt.Cerebro()
         # Add a strategy
-        cerebro.addstrategy(cls.strategy)
+        cls.cerebro.addstrategy(cls.strategy)
         # Add the Data Feed to Cerebro
-        cerebro.adddata(customCSV(dataname=csv_file_name))
+        cls.cerebro.adddata(customCSV(dataname=csv_file_name))
 
         # Set our desired cash start
-        cerebro.broker.setcash(cls.cache)
+        cls.cerebro.broker.setcash(cls.cache)
         # Run over everything
-        cerebro.run()
+        cls.cerebro.run()
 
-        return cerebro.broker.getvalue()
+        return cls.cerebro.broker.getvalue()
+
+    @classmethod
+    def plot(cls):
+        cls.cerebro.plot()
 
     @classmethod
     def set_strategy(cls, strategy):
@@ -140,9 +144,9 @@ class SmaCross(bt.Strategy): # bt.Strategy를 상속한 class로 생성해야 �
             size = int(self.broker.getcash() / close) - 1# 최대 구매 가능 개수
             if size > 0:
                 self.log(f'try buy cash[{self.broker.getcash()}], size=[{size}]')
-            self.order =self.buy(size=size) # 매수 size = 구매 개수 설정
-            self.max_price = close
-            self.buy_price = close
+                self.order =self.buy(size=size) # 매수 size = 구매 개수 설정
+                self.max_price = close
+                self.buy_price = close
         else :
             close = self.data.close[0]
 

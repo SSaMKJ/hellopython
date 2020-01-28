@@ -46,7 +46,7 @@ for cos in cospi:
 
 
 def gethering_codes():
-    limits = [300, 200]
+    limits = [300, 300]
     markets = ['COSPI', 'COSDAK']
 
     marketCap = MarketCap()
@@ -64,6 +64,11 @@ def gethering_codes():
 
             if roe < 0:
                 continue
+
+            try:
+                per = float(cos['PER'])
+            except Exception:
+                per = 1000000
             cosDF = daily.get_daily(cos['code'])
             month = month_ago(6)
             recent = cosDF.query('index>=%r' % month)
@@ -72,9 +77,18 @@ def gethering_codes():
             if float(cos['current']) < (1.0 - 0.3) * maxHigh:
                 print(cos)
                 print('found!!!')
-                stocks.append({'code': cos['code'], 'name': cos['name'], 'market': markets[i],
-                               'ratio': 1-(float(cos['current']) / maxHigh)})
+                add_to_stocks(cos, i, markets, maxHigh, stocks)
+            elif per < 10:
+                print(cos)
+                print('found!!!')
+                add_to_stocks(cos, i, markets, maxHigh, stocks)
+
     return stocks
+
+
+def add_to_stocks(cos, i, markets, maxHigh, stocks):
+    stocks.append({'code': cos['code'], 'name': cos['name'], 'market': markets[i],
+                   'ratio': 1 - (float(cos['current']) / maxHigh)})
 
 
 def filter_ignores(codes):
@@ -105,7 +119,7 @@ def send_emails(codes):
     </body></html>
     """)
 
-    Send_EMail().send_email("ssamkj@gmail.com", "오늘 ", "".join(html))
+    Send_EMail().send_email("ssamkj@gmail.com", f'오늘 {len(codes)} 확인하세요.', "".join(html))
     print(codes)
 
 
@@ -118,7 +132,7 @@ def get_ul(stock):
     ul.append("</a>")
     ul.append("</li>")
     ul.append("<li>")
-    ul.append(f'떨어진 비율 {stock["ratio"]}%')
+    ul.append(f'떨어진 비율 {stock["ratio"]*100}%')
     ul.append("</li>")
     ul.append("</ul>")
     print(ul)
@@ -134,6 +148,5 @@ def main():
 
 main()
 
-if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print('')
+# if __name__ == "__main__":
+#     main()

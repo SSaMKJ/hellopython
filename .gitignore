@@ -1,0 +1,5 @@
+conf/sender.info.json
+data/*
+backtest/*.csv
+venv/**
+.idea/**
